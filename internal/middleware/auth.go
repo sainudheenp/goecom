@@ -12,7 +12,7 @@ import (
 )
 
 // AuthMiddleware validates JWT tokens and sets user context
-func AuthMiddleware(authService *service.AuthService) gin.HandlerFunc {
+func AuthMiddleware(authService service.AuthServiceInterface) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
