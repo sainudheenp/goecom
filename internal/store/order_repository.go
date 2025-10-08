@@ -71,7 +71,7 @@ func (r *OrderRepository) GetByUserID(ctx context.Context, userID uuid.UUID, pag
 
 	var total int64
 	query := r.db.WithContext(ctx).Model(&Order{}).Where("user_id = ?", userID)
-	
+
 	if err := query.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
@@ -103,7 +103,7 @@ func (r *OrderRepository) List(ctx context.Context, page, size int) ([]Order, in
 
 	var total int64
 	query := r.db.WithContext(ctx).Model(&Order{})
-	
+
 	if err := query.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}

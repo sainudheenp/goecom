@@ -11,13 +11,13 @@ import (
 
 // Config holds all application configuration
 type Config struct {
-	Server   ServerConfig
-	Database DatabaseConfig
-	JWT      JWTConfig
-	Security SecurityConfig
-	CORS     CORSConfig
+	Server    ServerConfig
+	Database  DatabaseConfig
+	JWT       JWTConfig
+	Security  SecurityConfig
+	CORS      CORSConfig
 	RateLimit RateLimitConfig
-	Log      LogConfig
+	Log       LogConfig
 }
 
 // ServerConfig holds server-related configuration

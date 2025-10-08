@@ -28,16 +28,16 @@ func (u *User) BeforeCreate(tx *gorm.DB) error {
 
 // Product represents a product in the catalog
 type Product struct {
-	ID          uuid.UUID      `gorm:"type:uuid;primary_key;" json:"id"`
-	SKU         string         `gorm:"uniqueIndex;not null" json:"sku"`
-	Name        string         `gorm:"not null" json:"name"`
-	Description string         `json:"description"`
-	PriceCents  int            `gorm:"not null" json:"price_cents"`
-	Currency    string         `gorm:"not null;default:'USD'" json:"currency"`
-	Stock       int            `gorm:"not null;default:0" json:"stock"`
+	ID          uuid.UUID       `gorm:"type:uuid;primary_key;" json:"id"`
+	SKU         string          `gorm:"uniqueIndex;not null" json:"sku"`
+	Name        string          `gorm:"not null" json:"name"`
+	Description string          `json:"description"`
+	PriceCents  int             `gorm:"not null" json:"price_cents"`
+	Currency    string          `gorm:"not null;default:'USD'" json:"currency"`
+	Stock       int             `gorm:"not null;default:0" json:"stock"`
 	Images      JSONStringSlice `gorm:"type:jsonb" json:"images"`
-	CreatedAt   time.Time      `json:"created_at"`
-	UpdatedAt   time.Time      `json:"updated_at"`
+	CreatedAt   time.Time       `json:"created_at"`
+	UpdatedAt   time.Time       `json:"updated_at"`
 }
 
 // BeforeCreate hook to generate UUID before creating
@@ -70,17 +70,17 @@ func (c *CartItem) BeforeCreate(tx *gorm.DB) error {
 
 // Order represents a customer order
 type Order struct {
-	ID              uuid.UUID       `gorm:"type:uuid;primary_key;" json:"id"`
-	UserID          uuid.UUID       `gorm:"type:uuid;not null;index" json:"user_id"`
-	User            *User           `gorm:"foreignKey:UserID" json:"user,omitempty"`
-	TotalCents      int             `gorm:"not null" json:"total_cents"`
-	Currency        string          `gorm:"not null" json:"currency"`
-	Status          string          `gorm:"not null;default:'pending'" json:"status"` // pending, paid, shipped, cancelled
-	ShippingAddress JSONMap         `gorm:"type:jsonb" json:"shipping_address"`
-	PaymentInfo     JSONMap         `gorm:"type:jsonb" json:"payment_info,omitempty"`
-	Items           []OrderItem     `gorm:"foreignKey:OrderID" json:"items,omitempty"`
-	CreatedAt       time.Time       `json:"created_at"`
-	UpdatedAt       time.Time       `json:"updated_at"`
+	ID              uuid.UUID   `gorm:"type:uuid;primary_key;" json:"id"`
+	UserID          uuid.UUID   `gorm:"type:uuid;not null;index" json:"user_id"`
+	User            *User       `gorm:"foreignKey:UserID" json:"user,omitempty"`
+	TotalCents      int         `gorm:"not null" json:"total_cents"`
+	Currency        string      `gorm:"not null" json:"currency"`
+	Status          string      `gorm:"not null;default:'pending'" json:"status"` // pending, paid, shipped, cancelled
+	ShippingAddress JSONMap     `gorm:"type:jsonb" json:"shipping_address"`
+	PaymentInfo     JSONMap     `gorm:"type:jsonb" json:"payment_info,omitempty"`
+	Items           []OrderItem `gorm:"foreignKey:OrderID" json:"items,omitempty"`
+	CreatedAt       time.Time   `json:"created_at"`
+	UpdatedAt       time.Time   `json:"updated_at"`
 }
 
 // BeforeCreate hook to generate UUID before creating

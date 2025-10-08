@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 // UserRepository handles user data operations
