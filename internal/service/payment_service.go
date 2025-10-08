@@ -24,8 +24,8 @@ func NewPaymentService(orderRepo *store.OrderRepository) *PaymentService {
 
 // ChargeRequest represents payment charge input
 type ChargeRequest struct {
-	OrderID       uuid.UUID              `json:"order_id" binding:"required"`
-	PaymentMethod string                 `json:"payment_method" binding:"required"` // card, upi, wallet
+	OrderID        uuid.UUID              `json:"order_id" binding:"required"`
+	PaymentMethod  string                 `json:"payment_method" binding:"required"` // card, upi, wallet
 	PaymentDetails map[string]interface{} `json:"payment_details"`
 }
 

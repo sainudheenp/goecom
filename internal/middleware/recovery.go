@@ -19,7 +19,7 @@ func ErrorHandler() gin.HandlerFunc {
 		// Check if there are any errors
 		if len(c.Errors) > 0 {
 			err := c.Errors.Last()
-			
+
 			// Return error response
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error":   "internal server error",

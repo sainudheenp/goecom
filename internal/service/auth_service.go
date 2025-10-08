@@ -129,11 +129,11 @@ func (s *AuthService) Login(ctx context.Context, req LoginRequest) (*LoginRespon
 func (s *AuthService) generateToken(user *store.User) (string, error) {
 	now := time.Now()
 	claims := jwt.MapClaims{
-		"sub":  user.ID.String(),
+		"sub":   user.ID.String(),
 		"email": user.Email,
-		"role": user.Role,
-		"iat":  now.Unix(),
-		"exp":  now.Add(s.jwtExpires).Unix(),
+		"role":  user.Role,
+		"iat":   now.Unix(),
+		"exp":   now.Add(s.jwtExpires).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

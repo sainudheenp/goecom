@@ -39,11 +39,11 @@ type CartResponse struct {
 
 // CartItemResponse represents a cart item output
 type CartItemResponse struct {
-	ID         uuid.UUID          `json:"id"`
-	ProductID  uuid.UUID          `json:"product_id"`
-	Product    *store.Product     `json:"product"`
-	Quantity   int                `json:"quantity"`
-	Subtotal   int                `json:"subtotal_cents"`
+	ID        uuid.UUID      `json:"id"`
+	ProductID uuid.UUID      `json:"product_id"`
+	Product   *store.Product `json:"product"`
+	Quantity  int            `json:"quantity"`
+	Subtotal  int            `json:"subtotal_cents"`
 }
 
 // AddToCart adds or updates an item in the cart
