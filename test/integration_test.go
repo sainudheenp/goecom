@@ -6,11 +6,9 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 
 	"github.com/sainudheenp/goecom/internal/config"
 	"github.com/sainudheenp/goecom/internal/server"

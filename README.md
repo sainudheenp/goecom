@@ -1,53 +1,35 @@
-# E-Commerce Backend - Go
+# Simple E-Commerce Backend - Go
 
-A production-ready, feature-complete Go backend for an e-commerce application with catalog, cart, orders, users, payments, and admin management.
+A basic Go backend for an e-commerce application with essential features.
 
-## 🚀 Features
+## 🚀 Basic Features
 
-- **User Authentication**: JWT-based auth with bcrypt password hashing
-- **Product Catalog**: Full CRUD with search, filtering, pagination, and bulk import
-- **Shopping Cart**: Add/update/remove items with real-time stock validation
-- **Order Management**: Create orders from cart with atomic stock updates
-- **Payment Processing**: Pluggable payment service with stub implementation
-- **Admin Panel**: Protected admin endpoints for product and order management
-- **Security**: Role-based access control, rate limiting, input validation, CORS
-- **Observability**: Structured logging with request ID correlation
-- **Database**: PostgreSQL with GORM ORM and raw SQL migrations
-- **Testing**: Unit tests, integration tests, and CI/CD pipeline
-- **Documentation**: OpenAPI/Swagger spec for all endpoints
+- **User Registration & Login**: Simple JWT authentication
+- **Product Catalog**: View and search products
+- **Shopping Cart**: Add/remove items from cart
+- **Basic Orders**: Create orders from cart
+- **Database**: PostgreSQL with basic migrations
 
 ## 📋 Prerequisites
 
 - **Go**: 1.21 or higher
 - **PostgreSQL**: 15 or higher
-- **Docker & Docker Compose** (recommended for quick start)
-- **Make** (optional, for convenience commands)
+- **Docker & Docker Compose** (optional)
 
-## 🏗️ Architecture
+## 🏗️ Simple Architecture
 
 ```
 .
-├── cmd/
-│   └── server/          # Application entry point
-├── internal/
-│   ├── config/          # Configuration management
-│   ├── handler/         # HTTP handlers (thin layer)
-│   ├── middleware/      # Auth, logging, rate limiting
-│   ├── server/          # Server setup and routing
-│   ├── service/         # Business logic
-│   └── store/           # Data access layer (repositories)
+├── cmd/server/          # Application entry point
+├── handlers/            # HTTP handlers
+├── models/              # Database models
+├── database/            # Database connection
+├── auth/                # Simple authentication
 ├── migrations/          # SQL migrations
-├── scripts/             # Helper scripts (migrate, seed)
-├── test/                # Integration tests
-├── .github/workflows/   # CI/CD pipelines
-├── docker-compose.yml   # Local development setup
-├── Dockerfile           # Production container
-├── Makefile             # Convenience commands
-└── openapi.yaml         # API documentation
-
+└── main.go              # Main application
 ```
 
-## 🚀 Quick Start (Docker Compose)
+## 🚀 Quick Start
 
 ### 1. Clone and Setup
 
