@@ -88,6 +88,7 @@ func (s *PaymentService) ProcessCharge(ctx context.Context, userID uuid.UUID, re
 // simulatePayment simulates payment processing (stub)
 func (s *PaymentService) simulatePayment(method string) bool {
 	// 90% success rate
+	_ = method // method parameter reserved for future payment method logic
 	return rand.Float32() < 0.9
 }
 
