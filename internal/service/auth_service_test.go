@@ -70,16 +70,16 @@ func TestAuthService_Register(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mockRepo := new(MockUserRepository)
-			
+
 			if tt.name == "successful registration" {
 				mockRepo.On("Exists", mock.Anything, tt.request.Email).Return(false, nil)
 				mockRepo.On("Create", mock.Anything, mock.AnythingOfType("*store.User")).Return(nil)
 			}
 
 			authService := service.NewAuthService(mockRepo, "test-secret-key-for-testing-purposes", 24, 10)
-			
+
 			_, err := authService.Register(context.Background(), tt.request)
-			
+
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
