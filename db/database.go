@@ -1,4 +1,4 @@
-package store
+package db
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/sainudheenp/goecom/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -57,11 +58,11 @@ func (db *DB) Close() error {
 // AutoMigrate runs automatic migrations for all models
 func (db *DB) AutoMigrate() error {
 	return db.DB.AutoMigrate(
-		&User{},
-		&Product{},
-		&CartItem{},
-		&Order{},
-		&OrderItem{},
+		&models.User{},
+		&models.Product{},
+		&models.CartItem{},
+		&models.Order{},
+		&models.OrderItem{},
 	)
 }
 

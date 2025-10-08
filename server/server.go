@@ -6,11 +6,10 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/sainudheenp/goecom/internal/config"
-	"github.com/sainudheenp/goecom/internal/handler"
-	"github.com/sainudheenp/goecom/internal/middleware"
-	"github.com/sainudheenp/goecom/internal/service"
-	"github.com/sainudheenp/goecom/internal/store"
+	"github.com/sainudheenp/goecom/config"
+	"github.com/sainudheenp/goecom/db"
+	"github.com/sainudheenp/goecom/handlers"
+	"github.com/sainudheenp/goecom/middleware"
 	"gorm.io/gorm/logger"
 )
 
@@ -18,7 +17,7 @@ import (
 type Server struct {
 	router *gin.Engine
 	config *config.Config
-	db     *store.DB
+	db     *db.DB
 }
 
 // NewServer creates a new server instance
@@ -34,14 +33,14 @@ func NewServer(cfg *config.Config) (*Server, error) {
 		logLevel = logger.Info
 	}
 
-	db, err := store.NewDB(cfg.Database.URL, logLevel)
+	database, err := db.NewDB(cfg.Database.URL, logLevel)
 	if err != nil {
 		return nil, err
 	}
 
 	// Run migrations
 	log.Println("Running database migrations...")
-	if err := db.AutoMigrate(); err != nil {
+	if err := database.AutoMigrate(); err != nil {
 		return nil, err
 	}
 
@@ -51,7 +50,7 @@ func NewServer(cfg *config.Config) (*Server, error) {
 	s := &Server{
 		router: router,
 		config: cfg,
-		db:     db,
+		db:     database,
 	}
 
 	s.setupMiddleware()
