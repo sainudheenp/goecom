@@ -13,16 +13,24 @@ import (
 	"gorm.io/gorm"
 )
 
+// AuthServiceInterface defines the interface for auth service
+type AuthServiceInterface interface {
+	Register(ctx context.Context, req RegisterRequest) (*RegisterResponse, error)
+	Login(ctx context.Context, req LoginRequest) (*LoginResponse, error)
+	ValidateToken(tokenString string) (jwt.MapClaims, error)
+	GetUserByID(ctx context.Context, id uuid.UUID) (*store.User, error)
+}
+
 // AuthService handles authentication logic
 type AuthService struct {
-	userRepo   *store.UserRepository
+	userRepo   store.UserRepositoryInterface
 	jwtSecret  string
 	jwtExpires time.Duration
 	bcryptCost int
 }
 
 // NewAuthService creates a new auth service
-func NewAuthService(userRepo *store.UserRepository, jwtSecret string, jwtExpiresHours, bcryptCost int) *AuthService {
+func NewAuthService(userRepo store.UserRepositoryInterface, jwtSecret string, jwtExpiresHours, bcryptCost int) *AuthService {
 	return &AuthService{
 		userRepo:   userRepo,
 		jwtSecret:  jwtSecret,

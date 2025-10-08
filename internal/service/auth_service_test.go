@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/sainudheenp/goecom/internal/service"
 	"github.com/sainudheenp/goecom/internal/store"
 	"github.com/stretchr/testify/assert"
@@ -28,7 +29,7 @@ func (m *MockUserRepository) GetByEmail(ctx context.Context, email string) (*sto
 	return args.Get(0).(*store.User), args.Error(1)
 }
 
-func (m *MockUserRepository) GetByID(ctx context.Context, id interface{}) (*store.User, error) {
+func (m *MockUserRepository) GetByID(ctx context.Context, id uuid.UUID) (*store.User, error) {
 	args := m.Called(ctx, id)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)

@@ -2,14 +2,18 @@ package handler_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"github.com/sainudheenp/goecom/internal/handler"
 	"github.com/sainudheenp/goecom/internal/service"
+	"github.com/sainudheenp/goecom/internal/store"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -19,7 +23,7 @@ type MockAuthService struct {
 	mock.Mock
 }
 
-func (m *MockAuthService) Register(ctx interface{}, req service.RegisterRequest) (*service.RegisterResponse, error) {
+func (m *MockAuthService) Register(ctx context.Context, req service.RegisterRequest) (*service.RegisterResponse, error) {
 	args := m.Called(ctx, req)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
@@ -27,12 +31,28 @@ func (m *MockAuthService) Register(ctx interface{}, req service.RegisterRequest)
 	return args.Get(0).(*service.RegisterResponse), args.Error(1)
 }
 
-func (m *MockAuthService) Login(ctx interface{}, req service.LoginRequest) (*service.LoginResponse, error) {
+func (m *MockAuthService) Login(ctx context.Context, req service.LoginRequest) (*service.LoginResponse, error) {
 	args := m.Called(ctx, req)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
 	return args.Get(0).(*service.LoginResponse), args.Error(1)
+}
+
+func (m *MockAuthService) ValidateToken(tokenString string) (jwt.MapClaims, error) {
+	args := m.Called(tokenString)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(jwt.MapClaims), args.Error(1)
+}
+
+func (m *MockAuthService) GetUserByID(ctx context.Context, id uuid.UUID) (*store.User, error) {
+	args := m.Called(ctx, id)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*store.User), args.Error(1)
 }
 
 func TestAuthHandler_Register(t *testing.T) {

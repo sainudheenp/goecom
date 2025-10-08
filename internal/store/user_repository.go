@@ -6,6 +6,16 @@ import (
 	"github.com/google/uuid"
 )
 
+// UserRepositoryInterface defines the interface for user repository
+type UserRepositoryInterface interface {
+	Create(ctx context.Context, user *User) error
+	GetByID(ctx context.Context, id uuid.UUID) (*User, error)
+	GetByEmail(ctx context.Context, email string) (*User, error)
+	Update(ctx context.Context, user *User) error
+	Delete(ctx context.Context, id uuid.UUID) error
+	Exists(ctx context.Context, email string) (bool, error)
+}
+
 // UserRepository handles user data operations
 type UserRepository struct {
 	db *DB
