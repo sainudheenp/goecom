@@ -5,12 +5,12 @@ package test
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/sainudheenp/goecom/internal/config"
 	"github.com/sainudheenp/goecom/internal/server"
@@ -39,7 +39,8 @@ func TestFullUserFlow(t *testing.T) {
 	defer srv.Close()
 
 	// Get router for testing
-	router := srv.router
+	router := srv.GetRouter()
+	router := srv.GetRouter()
 
 	// Test 1: Register a new user
 	t.Run("Register User", func(t *testing.T) {
@@ -102,7 +103,7 @@ func TestFullUserFlow(t *testing.T) {
 		var resp map[string]interface{}
 		err := json.Unmarshal(w.Body.Bytes(), &resp)
 		require.NoError(t, err)
-		
+
 		items := resp["items"].([]interface{})
 		if len(items) > 0 {
 			firstProduct := items[0].(map[string]interface{})

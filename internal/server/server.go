@@ -194,3 +194,8 @@ func (s *Server) Run() error {
 func (s *Server) Close() error {
 	return s.db.Close()
 }
+
+// GetRouter returns the Gin router (for testing)
+func (s *Server) GetRouter() *gin.Engine {
+	return s.router
+}
