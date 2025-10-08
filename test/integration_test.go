@@ -40,12 +40,11 @@ func TestFullUserFlow(t *testing.T) {
 
 	// Get router for testing
 	router := srv.GetRouter()
-	router := srv.GetRouter()
 
 	// Test 1: Register a new user
 	t.Run("Register User", func(t *testing.T) {
 		registerReq := service.RegisterRequest{
-			Email:    fmt.Sprintf("testuser_%d@example.com", time.Now().Unix()),
+			Email:    "testuser@example.com",
 			Password: "testpass123",
 			FullName: "Test User",
 		}
@@ -67,11 +66,10 @@ func TestFullUserFlow(t *testing.T) {
 	})
 
 	// Test 2: Login
-	var accessToken string
 	t.Run("Login User", func(t *testing.T) {
 		loginReq := service.LoginRequest{
-			Email:    "admin@example.com", // Use seeded admin user
-			Password: "admin123",
+			Email:    "testuser@example.com",
+			Password: "testpass123",
 		}
 
 		body, _ := json.Marshal(loginReq)
@@ -87,7 +85,6 @@ func TestFullUserFlow(t *testing.T) {
 		err := json.Unmarshal(w.Body.Bytes(), &resp)
 		require.NoError(t, err)
 		assert.NotEmpty(t, resp.AccessToken)
-		accessToken = resp.AccessToken
 	})
 
 	// Test 3: List products

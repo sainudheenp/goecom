@@ -42,6 +42,16 @@ func (m *MockUserRepository) Exists(ctx context.Context, email string) (bool, er
 	return args.Bool(0), args.Error(1)
 }
 
+func (m *MockUserRepository) Update(ctx context.Context, user *store.User) error {
+	args := m.Called(ctx, user)
+	return args.Error(0)
+}
+
+func (m *MockUserRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	args := m.Called(ctx, id)
+	return args.Error(0)
+}
+
 func TestAuthService_Register(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -58,11 +68,11 @@ func TestAuthService_Register(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "invalid email",
+			name: "user already exists",
 			request: service.RegisterRequest{
-				Email:    "invalid-email",
+				Email:    "existing@example.com",
 				Password: "password123",
-				FullName: "Test User",
+				FullName: "Existing User",
 			},
 			wantErr: true,
 		},
@@ -75,6 +85,8 @@ func TestAuthService_Register(t *testing.T) {
 			if tt.name == "successful registration" {
 				mockRepo.On("Exists", mock.Anything, tt.request.Email).Return(false, nil)
 				mockRepo.On("Create", mock.Anything, mock.AnythingOfType("*store.User")).Return(nil)
+			} else if tt.name == "user already exists" {
+				mockRepo.On("Exists", mock.Anything, tt.request.Email).Return(true, nil)
 			}
 
 			authService := service.NewAuthService(mockRepo, "test-secret-key-for-testing-purposes", 24, 10)
