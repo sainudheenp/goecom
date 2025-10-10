@@ -6,8 +6,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/sainudheenp/goecom/internal/config"
-	"github.com/sainudheenp/goecom/internal/server"
+	"github.com/sainudheenp/goecom/config"
+	"github.com/sainudheenp/goecom/server"
 )
 
 func main() {

@@ -1,9 +1,7 @@
 package handler
 
 import (
-	"context"
 	"errors"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -68,9 +66,9 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	}
 
 	user := &models.User{
-		Email:    req.Email,
-		Password: string(hashedPassword),
-		FullName: req.FullName,
+		Email:        req.Email,
+		PasswordHash: string(hashedPassword),
+		FullName:     req.FullName,
 	}
 
 	if err := h.db.Create(user).Error; err != nil {
@@ -139,7 +137,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(req.Password)); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "invalid credentials",
 		})

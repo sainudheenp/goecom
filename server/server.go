@@ -7,8 +7,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/sainudheenp/goecom/config"
-	"github.com/sainudheenp/goecom/db"
-	"github.com/sainudheenp/goecom/handlers"
+	store "github.com/sainudheenp/goecom/db"
+	handler "github.com/sainudheenp/goecom/handlers"
 	"github.com/sainudheenp/goecom/middleware"
 	"gorm.io/gorm/logger"
 )
@@ -17,7 +17,7 @@ import (
 type Server struct {
 	router *gin.Engine
 	config *config.Config
-	db     *db.DB
+	db     *store.DB
 }
 
 // NewServer creates a new server instance
@@ -33,7 +33,7 @@ func NewServer(cfg *config.Config) (*Server, error) {
 		logLevel = logger.Info
 	}
 
-	database, err := db.NewDB(cfg.Database.URL, logLevel)
+	database, err := store.NewDB(cfg.Database.URL, logLevel)
 	if err != nil {
 		return nil, err
 	}
@@ -91,30 +91,9 @@ func (s *Server) setupMiddleware() {
 
 // setupRoutes configures routes
 func (s *Server) setupRoutes() {
-	// Initialize repositories
-	userRepo := store.NewUserRepository(s.db)
-	productRepo := store.NewProductRepository(s.db)
-	cartRepo := store.NewCartRepository(s.db)
-	orderRepo := store.NewOrderRepository(s.db)
-
-	// Initialize services
-	authService := service.NewAuthService(
-		userRepo,
-		s.config.JWT.Secret,
-		s.config.JWT.ExpiresHours,
-		s.config.Security.BcryptCost,
-	)
-	productService := service.NewProductService(productRepo)
-	cartService := service.NewCartService(cartRepo, productRepo)
-	orderService := service.NewOrderService(orderRepo, cartRepo, productRepo, s.db)
-	paymentService := service.NewPaymentService(orderRepo)
-
 	// Initialize handlers
-	authHandler := handler.NewAuthHandler(authService)
-	productHandler := handler.NewProductHandler(productService)
-	cartHandler := handler.NewCartHandler(cartService)
-	orderHandler := handler.NewOrderHandler(orderService)
-	paymentHandler := handler.NewPaymentHandler(paymentService)
+	authHandler := handler.NewAuthHandler(s.db.DB, s.config.JWT.Secret, s.config.JWT.ExpiresHours, s.config.Security.BcryptCost)
+	productHandler := handler.NewProductHandler(s.db.DB)
 
 	// Health check
 	s.router.GET("/health", func(c *gin.Context) {
@@ -140,45 +119,11 @@ func (s *Server) setupRoutes() {
 
 		// Protected routes
 		protected := v1.Group("")
-		protected.Use(middleware.AuthMiddleware(authService))
+		protected.Use(middleware.AuthMiddleware(s.db.DB, s.config.JWT.Secret))
 		{
 			// User routes
 			protected.GET("/me", authHandler.GetMe)
-
-			// Cart routes
-			protected.POST("/cart", cartHandler.AddToCart)
-			protected.GET("/cart", cartHandler.GetCart)
-			protected.DELETE("/cart/:item_id", cartHandler.RemoveFromCart)
-
-			// Order routes
-			protected.POST("/orders", orderHandler.CreateOrder)
-			protected.GET("/orders", orderHandler.ListUserOrders)
-			protected.GET("/orders/:id", orderHandler.GetOrder)
-
-			// Payment routes
-			protected.POST("/payments/charge", paymentHandler.ProcessCharge)
 		}
-
-		// Admin routes
-		admin := v1.Group("/admin")
-		admin.Use(middleware.AuthMiddleware(authService))
-		admin.Use(middleware.RequireRole("admin"))
-		{
-			// Admin product routes
-			admin.POST("/products", productHandler.CreateProduct)
-			admin.PUT("/products/:id", productHandler.UpdateProduct)
-			admin.DELETE("/products/:id", productHandler.DeleteProduct)
-			admin.POST("/products/bulk", productHandler.BulkImportProducts)
-
-			// Admin order routes
-			admin.GET("/orders", orderHandler.ListAllOrders)
-			admin.PATCH("/orders/:id", orderHandler.UpdateOrderStatus)
-		}
-
-		// Admin product routes at root level (alternative)
-		v1.POST("/products", middleware.AuthMiddleware(authService), middleware.RequireRole("admin"), productHandler.CreateProduct)
-		v1.PUT("/products/:id", middleware.AuthMiddleware(authService), middleware.RequireRole("admin"), productHandler.UpdateProduct)
-		v1.DELETE("/products/:id", middleware.AuthMiddleware(authService), middleware.RequireRole("admin"), productHandler.DeleteProduct)
 	}
 }
 
