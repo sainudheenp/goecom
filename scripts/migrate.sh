@@ -4,20 +4,29 @@
 
 set -e
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$SCRIPT_DIR/.."
+
+# Load environment variables from .env file if it exists
+if [ -f "$PROJECT_ROOT/.env" ]; then
+    echo "Loading environment from .env file..."
+    export $(grep -v '^#' "$PROJECT_ROOT/.env" | xargs)
+fi
+
 # Get the direction (up or down)
 DIRECTION=${1:-up}
 
 # Database connection from environment
 if [ -z "$DATABASE_URL" ]; then
     echo "Error: DATABASE_URL environment variable is not set"
+    echo "Make sure you have a .env file with DATABASE_URL in the project root"
     exit 1
 fi
 
 echo "Running migrations: $DIRECTION"
 
-# Get the directory where this script is located
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MIGRATIONS_DIR="$SCRIPT_DIR/../migrations"
+MIGRATIONS_DIR="$PROJECT_ROOT/migrations"
 
 # Function to run migrations
 run_migrations() {
