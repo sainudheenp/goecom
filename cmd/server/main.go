@@ -9,7 +9,6 @@ import (
 	"github.com/sainudheenp/goecom/config"
 	"github.com/sainudheenp/goecom/server"
 )
-
 func main() {
 	// Load configuration
 	cfg, err := config.Load()
